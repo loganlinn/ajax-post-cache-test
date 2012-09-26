@@ -1,0 +1,46 @@
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+	<title>AJAX POST Request Caching Test</title>
+	
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<style type="text/css" media="all">
+		.directive {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+		<form action="/cache-control" class="cache-control-test" method="post" accept-charset="utf-8">
+			<% @directives.each do |d| %>
+			<div class="directive">
+				<input type="checkbox" name="<%= d %>" value="<%= d %>" id="cb_<%= d %>"/>
+				<label for="cb_<%= d %>"><%= d %></label>
+			</div>
+			<% end %>
+			<input type="submit" value="Test" />
+		</form>
+		<div id="target"></div>
+
+	<script type="text/javascript" charset="utf-8">
+		$(function() {
+			var $t = $('#target');
+
+			$('form.cache-control-test')
+				.change(function() {
+					$t.empty();
+				})
+				.submit(function(e) {
+					$.post(e.target.action, $(this).serialize())
+						.done(function(data) {
+							var row = $('<div />');
+							row.addClass('row').html(data.time);
+							$t.append(row);
+						})
+					return false;
+				});
+		});
+	</script>
+</body>
+</html>
